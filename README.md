@@ -1,5 +1,7 @@
 # i18n
 
+> :warning: **Still under construction**
+
 simple i18n support that relies on standard go libraries
 
 ## How to start?
