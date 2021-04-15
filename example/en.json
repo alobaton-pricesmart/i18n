@@ -1,0 +1,8 @@
+{
+    "some": {
+        "awesome": {
+            "text": "Hello World!",
+            "textWithArgs": "Hello %s!"
+        }
+    }
+}
