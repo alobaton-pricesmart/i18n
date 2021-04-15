@@ -1,6 +1,6 @@
 # i18n
 
-> :warning: **Still under construction**
+[![Build Status](https://travis-ci.org/alobaton/i18n.svg?branch=main)](https://travis-ci.org/alobaton/i18n)
 
 Simple `i18n` support that relies on standard go libraries
 
