@@ -1,18 +1,19 @@
 package i18n
 
 const (
-	CA = "ca"
-	DE = "de"
-	EN = "en"
-	ES = "es"
-	EU = "eu"
-	FR = "fr"
-	IT = "it"
-	JA = "ja"
-	PT = "pt"
-	RU = "ru"
+	CA = "ca" // CA Catalan
+	DE = "de" // DE German
+	EN = "en" // EN English
+	ES = "es" // ES Spanish
+	EU = "eu" // EU Basque
+	FR = "fr" // FR French
+	IT = "it" // IT Italian
+	JA = "ja" // JA Japanese
+	PT = "pt" // PT Portuguese
+	RU = "ru" // RU Russian
 )
 
+// All supported languages
 var All = []string{
 	CA,
 	DE,
@@ -39,6 +40,7 @@ var native = map[string]string{
 	"RU": "русский",
 }
 
+// IsValid true if lang is a valid language, false otherwise.
 func IsValid(lang string) bool {
 	for _, l := range All {
 		if l == lang {
@@ -48,6 +50,7 @@ func IsValid(lang string) bool {
 	return false
 }
 
+// NativeName return the lang native name
 func NativeName(lang string) string {
 	return native[lang]
 }

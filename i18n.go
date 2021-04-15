@@ -9,26 +9,26 @@ import (
 	"strings"
 )
 
-// I18N
+// I18N handles directories, default locale and messages
 type I18N struct {
 	path       []string
 	mainLocale string
 	languages  map[string]interface{}
 }
 
-// Create a new Config with default value.
+// NewI18N create a new Config with default value.
 func NewI18N() *I18N {
 	i18n := new(I18N)
 	return i18n
 }
 
-// Store the config file json path value.
+// BindPath store the config file json path value.
 func (i *I18N) BindPath(path string) *I18N {
 	i.path = append(i.path, path)
 	return i
 }
 
-// Store the default language code value.
+// BindMainLocale store the default language code value.
 func (i *I18N) BindMainLocale(mainLocale string) (*I18N, error) {
 	if !IsValid(mainLocale) {
 		return nil, fmt.Errorf("invalid language %s. supported languages : %v", mainLocale, All)
@@ -38,7 +38,7 @@ func (i *I18N) BindMainLocale(mainLocale string) (*I18N, error) {
 	return i, nil
 }
 
-// Store the message to map variable.
+// Init store the message to map variable.
 func (i *I18N) Init() (*I18N, error) {
 	if i.languages == nil {
 		i.languages = make(map[string]interface{})
@@ -75,6 +75,7 @@ func (i *I18N) Init() (*I18N, error) {
 	return i, nil
 }
 
+// Exists return true and nil if locale exists on I18N struct, otherwise return false and an error if applies.
 func (i *I18N) Exists(locale string) (bool, error) {
 	if !IsValid(locale) {
 		return false, fmt.Errorf("invalid language %s. supported languages : %v", locale, All)
@@ -87,13 +88,14 @@ func (i *I18N) Exists(locale string) (bool, error) {
 	return true, nil
 }
 
+// Lookup the destination message based on language code & message.
 func (i *I18N) Lookup(key string, args ...interface{}) (string, error) {
 	locale := i.mainLocale
 
 	return i.LookupWithLocale(locale, key, args...)
 }
 
-// Lookup the destination message based on language code & message.
+// LookupWithLocale lookup the destination message based on language code & message.
 func (i *I18N) LookupWithLocale(locale, key string, args ...interface{}) (string, error) {
 	exists, err := i.Exists(locale)
 	if err != nil {
@@ -122,12 +124,12 @@ func lookup(key string, keys []string, m map[string]interface{}, args []interfac
 		if len(keys) < 1 {
 			if len(args) < 1 {
 				return strc, true
-			} else {
-				return fmt.Sprintf(strc, args...), true
 			}
-		} else {
-			return "", false
+
+			return fmt.Sprintf(strc, args...), true
 		}
+
+		return "", false
 	}
 
 	mapc, ok := v.(map[string]interface{})
