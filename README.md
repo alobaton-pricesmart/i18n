@@ -1,6 +1,6 @@
 # i18n
 
-[![Build Status](https://travis-ci.org/alobaton/i18n.svg?branch=main)](https://travis-ci.org/alobaton/i18n)
+[![Build Status](https://travis-ci.org/alobaton/i18n.svg?branch=main)](https://travis-ci.org/alobaton/i18n) [![Go Report Card](https://goreportcard.com/badge/github.com/alobaton/i18n)](https://goreportcard.com/report/github.com/alobaton/i18n)
 
 Simple `i18n` support that relies on standard go libraries
 
