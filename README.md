@@ -104,3 +104,7 @@ go get github.com/alobaton/i18n
 ```bash
 $ go test i18n/...
 ```
+
+## Example
+
+Here you can find an [example](https://github.com/alobaton/i18n/blob/main/example/main.go)
