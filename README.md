@@ -2,12 +2,22 @@
 
 > :warning: **Still under construction**
 
-simple i18n support that relies on standard go libraries
+Simple `i18n` support that relies on standard go libraries
 
 ## How to start?
 
-The i18n package mainly includes a set of methods for managing the data. Start by creating a new i18n instance.
+The `i18n` package mainly includes a set of methods for managing the data. Start by creating a `en.json` file.
+```bash
+{
+    "some": {
+        "awesome": {
+            "text": "Hello World!"
 
+        }
+    }
+}
+```
+Create a new `I18N` instance as follows.
 ```bash
 i18n := NewI18N().BindPath("./example/en.json")
 i18n, err := i18n.BindMainLocale("en")
@@ -21,13 +31,66 @@ if err != nil {
 }
 ```
 
-Once you setup the i18n instance, you must be able to lookup for messages.
+Once you setup the i18n instance, you should be able to lookup for messages.
 ```bash
 result, err := i18n.Lookup("some.awesome.text")
 if err != nil {
     ...
 }
 fmt.Println(result)
+```
+
+The program should print `Hello World!`
+
+### Lookup for a specific locale
+
+```bash
+result, err := i18n.LookupWithLocale("en", "some.awesome.text")
+if err != nil {
+    ...
+}
+fmt.Println(result)
+```
+
+The program should print `Hello World!`
+
+### Lookup with arguments
+
+`i18n` relies on `fmt.Sprintf(...)` to apply replacements, so you should be able to use it as follows.
+
+Your `.json` file should look like this. 
+```bash
+{
+    "some": {
+        "awesome": {
+            "textWithArgs": "Hello %s!"
+        }
+    }
+}
+```
+
+Lookup for messages like this.
+```bash
+result, err := i18n.Lookup("some.awesome.textWithArgs", "i18n")
+if err != nil {
+    ...
+}
+fmt.Println(result)
+```
+
+The program should print `Hello i18n!`
+
+## JSON Format
+
+```bash
+{
+    "some": {
+        "awesome": {
+            "text": "Hello World!",
+            "textWithArgs": "Hello %s!"
+        }
+    }
+}
 ```
 
 ## How to install?
