@@ -162,7 +162,7 @@ func (t *Translate) LookupWithLocale(locale, key string, args ...interface{}) (s
 	return message, nil
 }
 
-// loaded check if at least one laguage was loaded.
+// loaded check if at least one language was loaded.
 func (t *Translate) loaded() bool {
 	for _, v := range t.languages {
 		if v != nil {
