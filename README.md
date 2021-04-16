@@ -22,7 +22,7 @@ Create a new `Translate` instance as follows.
 var err error
 translate, err = i18n.NewTranslate().BindPath("./example").BindMainLocale("en").Init()
 if err != nil {
-	panic(err)
+	...
 }
 ```
 
@@ -40,7 +40,7 @@ The program should print `Hello World!`
 ### Lookup for a specific locale
 
 ```bash
-result, err := i18n.LookupWithLocale("en", "some.awesome.text")
+result, err := translate.LookupWithLocale("en", "some.awesome.text")
 if err != nil {
     ...
 }
