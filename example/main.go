@@ -6,22 +6,16 @@ import (
 	"github.com/alobaton/i18n"
 )
 
-var I18N *i18n.I18N
+var translate *i18n.Translate
 
 func main() {
 	var err error
-	I18N = i18n.NewI18N().BindPath("./en.json")
-	I18N, err = I18N.BindMainLocale("en")
+	translate, err = i18n.NewTranslate().BindPath("./example").BindMainLocale("en").Init()
 	if err != nil {
 		panic(err)
 	}
 
-	I18N, err = I18N.Init()
-	if err != nil {
-		panic(err)
-	}
-
-	result, err := I18N.Lookup("some.awesome.text")
+	result, err := translate.Lookup("some.awesome.text")
 	if err != nil {
 		panic(err)
 	}

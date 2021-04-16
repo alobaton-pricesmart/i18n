@@ -4,22 +4,21 @@ import (
 	"testing"
 )
 
-func TestLookupMessageFound(t *testing.T) {
-	var err error
-
-	i18n := NewI18N().BindPath("./example/en.json")
-	i18n, err = i18n.BindMainLocale("en")
-	if err != nil {
-		t.Errorf("Shouldn't return error, got %v", err)
+func TestPathNotFound(t *testing.T) {
+	_, err := NewTranslate().BindPath("./not-found-path").BindMainLocale("en").Init()
+	if err == nil {
+		t.Errorf("Should return error")
 	}
+}
 
-	i18n, err = i18n.Init()
+func TestLookupMessageFound(t *testing.T) {
+	translate, err := NewTranslate().BindPath("./example").BindMainLocale("en").Init()
 	if err != nil {
 		t.Errorf("Shouldn't return error, got %v", err)
 	}
 
 	expectedResult := "Hello World!"
-	result, err := i18n.Lookup("some.awesome.text")
+	result, err := translate.Lookup("some.awesome.text")
 	if err != nil {
 		t.Errorf("Shouldn't return error, got %v", err)
 	}
@@ -30,21 +29,18 @@ func TestLookupMessageFound(t *testing.T) {
 }
 
 func TestLookupMessageFoundWithArgs(t *testing.T) {
-	var err error
-
-	i18n := NewI18N().BindPath("./example/en.json")
-	i18n, err = i18n.BindMainLocale("en")
+	translate, err := NewTranslate().BindPath("./example").BindMainLocale("en").Init()
 	if err != nil {
 		t.Errorf("Shouldn't return error, got %v", err)
 	}
 
-	i18n, err = i18n.Init()
+	translate, err = translate.Init()
 	if err != nil {
 		t.Errorf("Shouldn't return error, got %v", err)
 	}
 
-	expectedResult := "Hello i18n!"
-	result, err := i18n.Lookup("some.awesome.textWithArgs", "i18n")
+	expectedResult := "Hello translate!"
+	result, err := translate.Lookup("some.awesome.textWithArgs", "translate")
 	if err != nil {
 		t.Errorf("Shouldn't return error, got %v", err)
 	}
@@ -55,23 +51,20 @@ func TestLookupMessageFoundWithArgs(t *testing.T) {
 }
 
 func TestLookupMessageNotFound(t *testing.T) {
-	var err error
-
-	i18n := NewI18N().BindPath("./example/en.json")
-	i18n, err = i18n.BindMainLocale("en")
+	translate, err := NewTranslate().BindPath("./example").BindMainLocale("en").Init()
 	if err != nil {
 		t.Errorf("Shouldn't return error, got %v", err)
 	}
 
-	i18n, err = i18n.Init()
+	translate, err = translate.Init()
 	if err != nil {
 		t.Errorf("Shouldn't return error, got %v", err)
 	}
 
 	expectedResult := "not.found"
-	result, err := i18n.Lookup("not.found")
-	if err != nil {
-		t.Errorf("Shouldn't return error, got %v", err)
+	result, err := translate.Lookup("not.found")
+	if err == nil {
+		t.Errorf("Should return error")
 	}
 
 	if result != expectedResult {
@@ -80,23 +73,20 @@ func TestLookupMessageNotFound(t *testing.T) {
 }
 
 func TestLookupMessageNotFoundMoreLevels(t *testing.T) {
-	var err error
-
-	i18n := NewI18N().BindPath("./example/en.json")
-	i18n, err = i18n.BindMainLocale("en")
+	translate, err := NewTranslate().BindPath("./example").BindMainLocale("en").Init()
 	if err != nil {
 		t.Errorf("Shouldn't return error, got %v", err)
 	}
 
-	i18n, err = i18n.Init()
+	translate, err = translate.Init()
 	if err != nil {
 		t.Errorf("Shouldn't return error, got %v", err)
 	}
 
 	expectedResult := "some.awesome.text.level"
-	result, err := i18n.Lookup("some.awesome.text.level")
-	if err != nil {
-		t.Errorf("Shouldn't return error, got %v", err)
+	result, err := translate.Lookup("some.awesome.text.level")
+	if err == nil {
+		t.Errorf("Should return error")
 	}
 
 	if result != expectedResult {

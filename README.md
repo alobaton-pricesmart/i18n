@@ -17,23 +17,18 @@ The `i18n` package mainly includes a set of methods for managing the data. Start
     }
 }
 ```
-Create a new `I18N` instance as follows.
+Create a new `Translate` instance as follows.
 ```bash
-i18n := NewI18N().BindPath("./example/en.json")
-i18n, err := i18n.BindMainLocale("en")
+var err error
+translate, err = i18n.NewTranslate().BindPath("./example").BindMainLocale("en").Init()
 if err != nil {
-	...
-}
-
-i18n, err = i18n.Init()
-if err != nil {
-	...
+	panic(err)
 }
 ```
 
 Once you setup the i18n instance, you should be able to lookup for messages.
 ```bash
-result, err := i18n.Lookup("some.awesome.text")
+result, err := translate.Lookup("some.awesome.text")
 if err != nil {
     ...
 }
@@ -71,7 +66,7 @@ Your `.json` file should look like this.
 
 Lookup for messages like this.
 ```bash
-result, err := i18n.Lookup("some.awesome.textWithArgs", "i18n")
+result, err := translate.Lookup("some.awesome.textWithArgs", "i18n")
 if err != nil {
     ...
 }
@@ -102,7 +97,7 @@ go get github.com/alobaton/i18n
 ## How to test?
 
 ```bash
-$ go test i18n/...
+$ go test ./...
 ```
 
 ## Example

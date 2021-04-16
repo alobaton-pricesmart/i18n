@@ -1,16 +1,26 @@
 package i18n
 
 const (
-	CA = "ca" // CA Catalan
-	DE = "de" // DE German
-	EN = "en" // EN English
-	ES = "es" // ES Spanish
-	EU = "eu" // EU Basque
-	FR = "fr" // FR French
-	IT = "it" // IT Italian
-	JA = "ja" // JA Japanese
-	PT = "pt" // PT Portuguese
-	RU = "ru" // RU Russian
+	// CA Catalan
+	CA = "ca"
+	// DE German
+	DE = "de"
+	// EN English
+	EN = "en"
+	// ES Spanish
+	ES = "es"
+	// EU Basque
+	EU = "eu"
+	// FR French
+	FR = "fr"
+	// IT Italian
+	IT = "it"
+	// JA Japanese
+	JA = "ja"
+	// PT Portuguese
+	PT = "pt"
+	// RU Russian
+	RU = "ru"
 )
 
 // All supported languages
