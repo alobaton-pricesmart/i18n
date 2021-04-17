@@ -7,6 +7,9 @@ import (
 	"io/ioutil"
 	"os"
 	"strings"
+
+	"github.com/alobaton/i18n/extensions"
+	"github.com/alobaton/i18n/langs"
 )
 
 // Translate handles directories, default locale and messages.
@@ -21,8 +24,7 @@ type Translate struct {
 
 // NewTranslate create a new Config with default value.
 func NewTranslate() *Translate {
-	i18n := new(Translate)
-	return i18n
+	return new(Translate)
 }
 
 // BindPath store the config file json path value.
@@ -39,28 +41,19 @@ func (t *Translate) BindMainLocale(mainLocale string) *Translate {
 
 // BindLocale store a locale code value.
 func (t *Translate) BindLocale(locale string) *Translate {
-	temp := append(t.locales, locale)
-	check := make(map[string]int)
-	for _, l := range temp {
-		check[l] = 1
-	}
-
-	for l := range check {
-		t.locales = append(t.locales, l)
-	}
-
+	t.locales = append(t.locales, locale)
 	return t
 }
 
 // Init store the message to map variable.
 func (t *Translate) Init() (*Translate, error) {
-	if !IsValid(t.mainLocale) {
-		return nil, fmt.Errorf("invalid language %s. supported languages : %v", t.mainLocale, All)
+	if !langs.IsValid(t.mainLocale) {
+		return nil, fmt.Errorf("invalid language %s. supported languages : %v", t.mainLocale, langs.All)
 	}
 
 	for _, l := range t.locales {
-		if !IsValid(l) {
-			return nil, fmt.Errorf("invalid language %s. supported languages : %v", l, All)
+		if !langs.IsValid(l) {
+			return nil, fmt.Errorf("invalid language %s. supported languages : %v", l, langs.All)
 		}
 	}
 
@@ -70,35 +63,36 @@ func (t *Translate) Init() (*Translate, error) {
 
 	for _, p := range t.path {
 		for _, l := range t.locales {
-			// for now only supports json files
-			path := fmt.Sprintf("%s/%s%s", p, l, ".json")
+			for _, ext := range extensions.All {
+				path := fmt.Sprintf("%s/%s%s", p, l, ext)
 
-			f, err := os.Open(path)
-			if err != nil {
-				if os.IsNotExist(err) {
-					continue
+				f, err := os.Open(path)
+				if err != nil {
+					if os.IsNotExist(err) {
+						continue
+					}
+
+					return nil, err
+				}
+				defer f.Close()
+
+				content, err := ioutil.ReadAll(f)
+				if err != nil {
+					return nil, err
 				}
 
-				return nil, err
-			}
-			defer f.Close()
+				messages := make(map[string]interface{})
+				err = json.Unmarshal(content, &messages)
+				if err != nil {
+					return nil, err
+				}
 
-			content, err := ioutil.ReadAll(f)
-			if err != nil {
-				return nil, err
+				t.languages[l] = messages
 			}
-
-			messages := make(map[string]interface{})
-			err = json.Unmarshal(content, &messages)
-			if err != nil {
-				return nil, err
-			}
-
-			t.languages[l] = messages
 		}
 	}
 
-	if t.loaded() {
+	if t.IsLoaded() {
 		return nil, errors.New("no languages loaded")
 	}
 
@@ -107,11 +101,27 @@ func (t *Translate) Init() (*Translate, error) {
 	return t, nil
 }
 
+// IsLoaded check if at least one language was loaded.
+func (t *Translate) IsLoaded() bool {
+	for _, v := range t.languages {
+		if v != nil {
+			m, ok := v.(map[string]interface{})
+			if ok {
+				if len(m) > 0 {
+					return false
+				}
+			}
+		}
+	}
+
+	return true
+}
+
 // Exists return true and nil if locale exists on Translate struct,
 // otherwise return false and an error if applies.
 func (t *Translate) Exists(locale string) (bool, error) {
-	if !IsValid(locale) {
-		return false, fmt.Errorf("invalid language %s. supported languages : %v", locale, All)
+	if !langs.IsValid(locale) {
+		return false, fmt.Errorf("invalid language %s. supported languages : %v", locale, langs.All)
 	}
 
 	if t.languages[locale] == nil {
@@ -149,7 +159,7 @@ func (t *Translate) LookupWithLocale(locale, key string, args ...interface{}) (s
 	}
 
 	if !exists {
-		return key, fmt.Errorf("locales soen't exists %s. supported languages : %v", locale, All)
+		return key, fmt.Errorf("locales soen't exists %s. supported languages : %v", locale, langs.All)
 	}
 
 	keys := strings.Split(key, ".")
@@ -160,22 +170,6 @@ func (t *Translate) LookupWithLocale(locale, key string, args ...interface{}) (s
 	}
 
 	return message, nil
-}
-
-// loaded check if at least one language was loaded.
-func (t *Translate) loaded() bool {
-	for _, v := range t.languages {
-		if v != nil {
-			m, ok := v.(map[string]interface{})
-			if ok {
-				if len(m) > 0 {
-					return false
-				}
-			}
-		}
-	}
-
-	return true
 }
 
 // lookup for a key k in a struct m. Replace args if founded

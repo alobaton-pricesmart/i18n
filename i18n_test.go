@@ -4,7 +4,7 @@ import (
 	"testing"
 )
 
-func TestPathNotFound(t *testing.T) {
+func TestInitPathNotFound(t *testing.T) {
 	_, err := NewTranslate().BindPath("./not-found-path").BindMainLocale("en").Init()
 	if err == nil {
 		t.Errorf("Should return error")
@@ -28,7 +28,24 @@ func TestLookupMessageFound(t *testing.T) {
 	}
 }
 
-func TestLookupMessageFoundWithArgs(t *testing.T) {
+func TestLookupWithLocaleMessageFound(t *testing.T) {
+	translate, err := NewTranslate().BindPath("./example").BindMainLocale("en").BindLocale("es").Init()
+	if err != nil {
+		t.Errorf("Shouldn't return error, got %v", err)
+	}
+
+	expectedResult := "Hola Mundo!"
+	result, err := translate.LookupWithLocale("es", "some.awesome.text")
+	if err != nil {
+		t.Errorf("Shouldn't return error, got %v", err)
+	}
+
+	if result != expectedResult {
+		t.Errorf("Should return %s, got %s", expectedResult, result)
+	}
+}
+
+func TestLookupFoundWithArgs(t *testing.T) {
 	translate, err := NewTranslate().BindPath("./example").BindMainLocale("en").Init()
 	if err != nil {
 		t.Errorf("Shouldn't return error, got %v", err)
@@ -50,7 +67,29 @@ func TestLookupMessageFoundWithArgs(t *testing.T) {
 	}
 }
 
-func TestLookupMessageNotFound(t *testing.T) {
+func TestLookupWithLocaleFoundWithArgs(t *testing.T) {
+	translate, err := NewTranslate().BindPath("./example").BindMainLocale("en").BindLocale("es").Init()
+	if err != nil {
+		t.Errorf("Shouldn't return error, got %v", err)
+	}
+
+	translate, err = translate.Init()
+	if err != nil {
+		t.Errorf("Shouldn't return error, got %v", err)
+	}
+
+	expectedResult := "Hola translate!"
+	result, err := translate.LookupWithLocale("es", "some.awesome.textWithArgs", "translate")
+	if err != nil {
+		t.Errorf("Shouldn't return error, got %v", err)
+	}
+
+	if result != expectedResult {
+		t.Errorf("Should return %s, got %s", expectedResult, result)
+	}
+}
+
+func TestLookupNotFound(t *testing.T) {
 	translate, err := NewTranslate().BindPath("./example").BindMainLocale("en").Init()
 	if err != nil {
 		t.Errorf("Shouldn't return error, got %v", err)
@@ -72,7 +111,7 @@ func TestLookupMessageNotFound(t *testing.T) {
 	}
 }
 
-func TestLookupMessageNotFoundMoreLevels(t *testing.T) {
+func TestLookupNotFoundMoreLevels(t *testing.T) {
 	translate, err := NewTranslate().BindPath("./example").BindMainLocale("en").Init()
 	if err != nil {
 		t.Errorf("Shouldn't return error, got %v", err)
